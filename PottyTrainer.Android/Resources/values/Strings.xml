@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="ApplicationName">Potty Trainer</string>
+  <string name="pee">pee</string>
+  <string name="both">both</string>
+  <string name="poo">poo</string>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/svMain">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <Button
+            android:id="@+id/btnPee"
+            android:layout_width="fill_parent"
+            android:layout_height="90.0dp"
+            android:text="@string/pee"
+            android:layout_marginBottom="0.0dp"
+            android:tag="pee"
+            android:clickable="true" />
+        <Button
+            android:id="@+id/btnPoo"
+            android:layout_width="fill_parent"
+            android:layout_height="90.0dp"
+            android:text="@string/poo"
+            android:layout_marginBottom="0.0dp"
+            android:tag="poo" />
+        <Button
+            android:id="@+id/btnBoth"
+            android:layout_width="fill_parent"
+            android:layout_height="90.0dp"
+            android:text="@string/both"
+            android:layout_marginBottom="0.0dp"
+            android:tag="both" />
+    </LinearLayout>
+</ScrollView>
