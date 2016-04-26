@@ -12,24 +12,25 @@ namespace PottyTrainer.Core.Services
         {
             _repository = repository;
         }
-        public bool SaveEvent(PeePooEvent evt)
+        public long SaveEvent(PeePooEvent evt)
         {
-            return true;
+            return _repository.SaveEvent(evt);
         }
 
         public bool DeleteEvent(long id)
         {
-            return true;
+            return _repository.DeleteEvent(id);
         }
 
         public PeePooEvent GetEvent(long id)
         {
-            return null;
+            return _repository.GetEvent(id);
         }
 
         public List<PeePooEvent> GetEvents()
         {
-            return new List<PeePooEvent>();
+            return _repository.GetEvents();
+
         }
     }
 }

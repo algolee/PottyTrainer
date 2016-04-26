@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="DetailsActivity.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="PottyTrainerService.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

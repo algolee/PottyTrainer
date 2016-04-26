@@ -1,12 +1,13 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Widget;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using PottyTrainer.Core.Models;
 using PottyTrainer.Core.Repository;
 using PottyTrainer.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PottyTrainer.Android
 {
@@ -17,13 +18,13 @@ namespace PottyTrainer.Android
 
         public MainActivity()
         {
-            
+
             _DataService = new PottyTrainerDataService(new TestRepository());
         }
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-           
+            StartService(new Intent(this, typeof(PottyTrainerService)));
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
@@ -44,48 +45,67 @@ namespace PottyTrainer.Android
             if (btn == null) return;
             var tag = btn.Tag.ToString();
 
-            var evnt = new PeePooEvent {EventWhen = DateTime.Now};
+            var evnt = new PeePooEvent { EventWhen = DateTime.Now };
             if (tag.Equals("pee", StringComparison.CurrentCultureIgnoreCase))
                 evnt.EventType = EventType.Pee;
             else if (tag.Equals("poo", StringComparison.CurrentCultureIgnoreCase))
                 evnt.EventType = EventType.Poo;
             else evnt.EventType = EventType.Both;
             _DataService.SaveEvent(evnt);
+            LoadNextActivity(evnt.Id);
+        }
+
+        private void LoadNextActivity(long id)
+        {
+            var intent = new Intent(this, typeof(DetailsActivity));
+            intent.PutExtra("eventId", id);
+            StartActivity(intent);
         }
     }
 
     public class TestRepository : IPottyTrainerRepository
     {
-        private IDictionary<long, PeePooEvent> _Store= new Dictionary<long, PeePooEvent>();
+        private IDictionary<long, PeePooEvent> _Store = new Dictionary<long, PeePooEvent>();
         private long _NextId = 0;
-        public bool SaveEvent(PeePooEvent evt)
+        public long SaveEvent(PeePooEvent evt)
         {
             try
             {
-                _NextId++;
-                _Store.Add(_NextId, evt);
-                return true;
+                if (evt.Id <= 0)
+                {
+                    _NextId++;
+                    evt.Id = _NextId;
+                    _Store.Add(_NextId, evt);
+                }
+                else
+                {
+                    _Store[evt.Id] = evt;
+
+                }
+                return evt.Id;
             }
             catch (Exception)
             {
 
-                return false;
+                return -1;
             }
         }
 
         public bool DeleteEvent(long id)
         {
-            throw new NotImplementedException();
+            return _Store.Remove(id);
+
         }
 
         public PeePooEvent GetEvent(long id)
         {
-            throw new NotImplementedException();
+            return _Store[id];
         }
 
         public List<PeePooEvent> GetEvents()
         {
-            throw new NotImplementedException();
+            return _Store.Values.ToList();
+
         }
     }
 

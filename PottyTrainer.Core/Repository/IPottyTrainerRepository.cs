@@ -5,7 +5,7 @@ namespace PottyTrainer.Core.Repository
 {
     public interface IPottyTrainerRepository
     {
-        bool SaveEvent(PeePooEvent evt);
+        long SaveEvent(PeePooEvent evt);
         bool DeleteEvent(long id);
         PeePooEvent GetEvent(long id);
         List<PeePooEvent> GetEvents();
