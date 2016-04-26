@@ -40,7 +40,7 @@
     <Compile Include="Models\PeePooEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\PottyTrainerDataService.cs" />
-    <Compile Include="Repository\PottyTrainerRepository.cs" />
+    <Compile Include="Repository\IPottyTrainerRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
