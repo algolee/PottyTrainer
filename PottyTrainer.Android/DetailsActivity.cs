@@ -2,8 +2,7 @@
 using Android.App;
 using Android.OS;
 using Android.Widget;
-using PottyTrainer.Core.Models;
-using PottyTrainer.Core.Services;
+using PottyTrainer.Contracts;
 using System;
 
 namespace PottyTrainer.Android
@@ -14,7 +13,7 @@ namespace PottyTrainer.Android
         private PeePooEvent _CurrentEvent;
         private Button _BtnDate;
         private Button _BtnTime;
-        private PottyTrainerDataService _DataService;
+        // private PottyTrainerDataService _DataService;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -30,7 +29,7 @@ namespace PottyTrainer.Android
 
         private void SaveEvent(object sender, EventArgs e)
         {
-            _DataService.SaveEvent(_CurrentEvent);
+            //_DataService.SaveEvent(_CurrentEvent);
         }
 
         private void BtnDateOnClick(object sender, EventArgs eventArgs)

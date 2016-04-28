@@ -85,9 +85,9 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PottyTrainer.Core\PottyTrainer.Core.csproj">
-      <Project>{f534e2f3-3474-49a4-a73c-82fbb955a98b}</Project>
-      <Name>PottyTrainer.Core</Name>
+    <ProjectReference Include="..\PottyTrainer.Contracts\PottyTrainer.Contracts.csproj">
+      <Project>{5ab34a3e-08cf-40f2-8c51-7cba95e49e18}</Project>
+      <Name>PottyTrainer.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

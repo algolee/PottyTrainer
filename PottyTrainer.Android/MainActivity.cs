@@ -2,9 +2,7 @@
 using Android.Content;
 using Android.OS;
 using Android.Widget;
-using PottyTrainer.Core.Models;
-using PottyTrainer.Core.Repository;
-using PottyTrainer.Core.Services;
+using PottyTrainer.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +12,12 @@ namespace PottyTrainer.Android
     [Activity(Label = "Potty Trainer", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        private PottyTrainerDataService _DataService;
+        //private PottyTrainerDataService _DataService;
 
         public MainActivity()
         {
 
-            _DataService = new PottyTrainerDataService(new TestRepository());
+            //_DataService = new PottyTrainerDataService(new TestRepository());
         }
         protected override void OnCreate(Bundle bundle)
         {
@@ -51,7 +49,7 @@ namespace PottyTrainer.Android
             else if (tag.Equals("poo", StringComparison.CurrentCultureIgnoreCase))
                 evnt.EventType = EventType.Poo;
             else evnt.EventType = EventType.Both;
-            _DataService.SaveEvent(evnt);
+            //_DataService.SaveEvent(evnt);
             LoadNextActivity(evnt.Id);
         }
 
