@@ -34,19 +34,27 @@ namespace PottyTrainer.Android
 
         private void BtnDateOnClick(object sender, EventArgs eventArgs)
         {
-
+            var now = DateTime.Now;
+            var frag = new DatePickerDialog(this, OnDateSelected, now.Year, now.Month, now.Day);
+            frag.Show();
         }
 
         private void BtnTimeOnClick(object sender, EventArgs eventArgs)
         {
-
-            var frag = new DatePickerDialog(this, OnTimeSelected, 2016, 5, 5);
+            var now = DateTime.Now;
+            var frag = new TimePickerDialog(this, OnTimeSelected, now.Hour, now.Minute, true);
             frag.Show();
+
         }
 
-        private void OnTimeSelected(object sender, DatePickerDialog.DateSetEventArgs e)
+        private void OnTimeSelected(object sender, TimePickerDialog.TimeSetEventArgs e)
         {
+            _BtnTime.Text = e.HourOfDay + ":" + e.Minute;
+        }
 
+        private void OnDateSelected(object sender, DatePickerDialog.DateSetEventArgs e)
+        {
+            _BtnDate.Text = e.Date.ToShortDateString();
         }
     }
 }
