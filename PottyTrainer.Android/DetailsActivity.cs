@@ -7,7 +7,7 @@ using System;
 
 namespace PottyTrainer.Android
 {
-    [Activity(Label = "Details", Name = "DetailView")]
+    [Activity(Label = "Details")]
     public class DetailsActivity : Activity
     {
         private PeePooEvent _CurrentEvent;
