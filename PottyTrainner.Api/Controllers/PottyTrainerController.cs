@@ -25,9 +25,10 @@ namespace PottyTrainner.Api.Controllers
 
         [HttpPost]
         [Route("events")]
-        public int Post([FromBody]PeePooEvent peePooEvent)
+        public IActionResult Post([FromBody]PeePooEvent peePooEvent)
         {
-            return 100;
+
+            return Ok(100);
 
         }
 

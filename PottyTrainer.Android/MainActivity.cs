@@ -57,7 +57,7 @@ namespace PottyTrainer.Android
         {
             var intent = new Intent(this, typeof(DetailsActivity));
             intent.PutExtra("eventId", id);
-            StartActivity(intent);
+            StartActivityForResult(intent, 200);
         }
     }
 
