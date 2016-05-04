@@ -27,7 +27,7 @@ namespace PottyTrainer.Android
 
         public override IBinder OnBind(Intent intent)
         {
-            _Binder = new PottyTrainerBinder(this);
+            _Binder = new DataServiceBinder(this);
             return _Binder;
         }
 
@@ -91,41 +91,54 @@ namespace PottyTrainer.Android
         }
     }
 
-    public class PottyTrainerBinder : Binder
+    public class DataServiceBinder : Binder
     {
         public PottyTrainerService PottyTrainerService { get; set; }
 
         public bool IsBound { get; set; }
 
-        public PottyTrainerBinder(PottyTrainerService svc)
+        public DataServiceBinder(PottyTrainerService svc)
         {
             PottyTrainerService = svc;
         }
 
     }
 
+
+
     public class PottyTrainerServiceConnection : Java.Lang.Object, IServiceConnection
     {
-        public PottyTrainerBinder PottyTrainerBinder { get; private set; }
-        public PottyTrainerServiceConnection(PottyTrainerBinder binder)
+        public EventHandler<EventArgs> ServiceConnected = delegate { };
+        public DataServiceBinder DataServiceBinder { get; private set; }
+        public PottyTrainerServiceConnection(DataServiceBinder binder)
         {
             if (binder == null) return;
-            PottyTrainerBinder = binder;
+            DataServiceBinder = binder;
 
+        }
+
+        public PottyTrainerServiceConnection()
+        {
+            DataServiceBinder = new DataServiceBinder(new PottyTrainerService());
         }
         public void OnServiceConnected(ComponentName name, IBinder service)
         {
-            var binder = service as PottyTrainerBinder;
+            var binder = service as DataServiceBinder;
             if (binder == null) return;
-            PottyTrainerBinder = binder;
-            PottyTrainerBinder.IsBound = true;
+            DataServiceBinder = binder;
+            DataServiceBinder.IsBound = true;
+            RaiseServiceConnected();
 
 
         }
 
+        void RaiseServiceConnected()
+        {
+            ServiceConnected(this, new EventArgs { });
+        }
         public void OnServiceDisconnected(ComponentName name)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

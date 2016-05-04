@@ -22,7 +22,7 @@ namespace PottyTrainer.Android
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            StartService(new Intent(this, typeof(PottyTrainerService)));
+            BindService(new Intent(this, typeof(PottyTrainerService)), new PottyTrainerServiceConnection(),  );
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
