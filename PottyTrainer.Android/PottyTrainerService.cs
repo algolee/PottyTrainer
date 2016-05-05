@@ -108,7 +108,7 @@ namespace PottyTrainer.Android
 
     public class PottyTrainerServiceConnection : Java.Lang.Object, IServiceConnection
     {
-        public EventHandler<EventArgs> ServiceConnected = delegate { };
+        public EventHandler<ServiceConnectedEventArgs> ServiceConnected = delegate { };
         public DataServiceBinder DataServiceBinder { get; private set; }
         public PottyTrainerServiceConnection(DataServiceBinder binder)
         {
@@ -132,13 +132,23 @@ namespace PottyTrainer.Android
 
         }
 
-        void RaiseServiceConnected()
+        private void RaiseServiceConnected()
         {
-            ServiceConnected(this, new EventArgs { });
+            ServiceConnected(this, new ServiceConnectedEventArgs(DataServiceBinder));
         }
         public void OnServiceDisconnected(ComponentName name)
         {
+            DataServiceBinder.IsBound = false;
+        }
+    }
 
+    public class ServiceConnectedEventArgs : EventArgs
+    {
+        public IBinder Binder { get; set; }
+
+        public ServiceConnectedEventArgs(IBinder binder)
+        {
+            Binder = binder;
         }
     }
 }

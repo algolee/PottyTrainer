@@ -12,17 +12,10 @@ namespace PottyTrainer.Android
     [Activity(Label = "Potty Trainer", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        //private PottyTrainerDataService _DataService;
-
-        public MainActivity()
-        {
-
-            //_DataService = new PottyTrainerDataService(new TestRepository());
-        }
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            BindService(new Intent(this, typeof(PottyTrainerService)), new PottyTrainerServiceConnection(),  );
+
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
@@ -49,7 +42,7 @@ namespace PottyTrainer.Android
             else if (tag.Equals("poo", StringComparison.CurrentCultureIgnoreCase))
                 evnt.EventType = EventType.Poo;
             else evnt.EventType = EventType.Both;
-            //_DataService.SaveEvent(evnt);
+            AppUtils.Instance.PottyTrainerService.SaveEvent(evnt);
             LoadNextActivity(evnt.Id);
         }
 
