@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-*",
+  "frameworks": {
+    "net451": {
+      "wrappedProject": "../../PottyTrainer.DataSource/PottyTrainer.DataSource.csproj",
+      "bin": {
+        "assembly": "../../PottyTrainer.DataSource/obj/{configuration}/PottyTrainer.DataSource.dll",
+        "pdb": "../../PottyTrainer.DataSource/obj/{configuration}/PottyTrainer.DataSource.pdb"
+      },
+      "dependencies": {
+        "Microsoft.Azure.DocumentDB": "1.7.1",
+        "Newtonsoft.Json": "6.0.8"
+      }
+    }
+  }
+}

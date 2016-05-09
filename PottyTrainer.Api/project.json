@@ -23,12 +23,14 @@
   "frameworks": {
     "dnx451": {
       "dependencies": {
-        "PottyTrainer.Contracts": "1.0.0-*"
+        "PottyTrainer.Contracts": "1.0.0-*",
+        "PottyTrainer.DataSource": "1.0.0-*"
       }
     },
     "dnxcore50": {
       "dependencies": {
         "PottyTrainer.Contracts": "1.0.0-*"
+       
       }
     }
   },

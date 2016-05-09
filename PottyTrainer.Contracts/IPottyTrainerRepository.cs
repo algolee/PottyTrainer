@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PottyTrainer.Contracts
 {
     public interface IPottyTrainerRepository
     {
-        long SaveEvent(PeePooEvent evt);
-        bool DeleteEvent(long id);
-        PeePooEvent GetEvent(long id);
+        Task<int> SaveEvent(PeePooEvent evt);
+        Task<bool> DeleteEvent(int id);
+        PeePooEvent GetEvent(int id);
         List<PeePooEvent> GetEvents();
-
-
     }
 }
