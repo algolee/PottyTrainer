@@ -1,5 +1,4 @@
-﻿using PottyTrainer.Contracts;
-using PottyTrainer.DataSource;
+﻿using PottyTrainer.DataModel;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -12,13 +11,9 @@ namespace PottyTrainer.Api461.Controllers
     public class PottyTrainerController : ApiController
     {
         IPottyTrainerRepository _Repository;
-        //public PottyTrainerController(IPottyTrainerRepository repository)
-        //{
-        //    _Repository = repository;
-        //}
-        public PottyTrainerController()
+        public PottyTrainerController(IPottyTrainerRepository repository)
         {
-            _Repository = new PottyTrainerRepository();
+            _Repository = repository;
         }
 
         [HttpGet]
@@ -37,7 +32,7 @@ namespace PottyTrainer.Api461.Controllers
 
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("events")]
-        public async Task<int> Post([FromBody]PeePooEvent peePooEvent)
+        public async Task<string> Post([FromBody]PeePooEvent peePooEvent)
         {
             if (peePooEvent == null)
                 throw new HttpResponseException(new HttpResponseMessage { ReasonPhrase = "incorrect object format", StatusCode = HttpStatusCode.BadRequest });

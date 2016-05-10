@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using PottyTrainer.Contracts;
+using PottyTrainer.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace PottyTrainer.DataSource
         private const string PrimaryKey = "6nR1SI3s80izsavOo0qB0jfbG5O1AVUfqslUG6KaciED5WjhYZbDOQIgTVzpANF9jtPAl7FydfFOEsRp6ZGc7Q==";
         private const string Database = "pottytraining";
         private const string Collection = "pottyevents";
-        private static readonly Uri CollectionUri = UriFactory.CreateDocumentCollectionUri(Database, Collection);
+        private static readonly Uri DocumentCollectionUri = UriFactory.CreateDocumentCollectionUri(Database, Collection);
         private readonly DocumentClient _Client;
         public PottyTrainerRepository()
         {
@@ -26,20 +26,26 @@ namespace PottyTrainer.DataSource
 
 
 
-        public async Task<int> SaveEvent(PeePooEvent evt)
+        public async Task<string> SaveEvent(PeePooEvent evt)
         {
             try
             {
                 ResourceResponse<Document> response;
                 //new
-                if (evt.Id <= 0)
-                    response = await _Client.CreateDocumentAsync(CollectionUri, evt);
-                else //update
-                    response = await _Client.UpsertDocumentAsync(CollectionUri, evt);
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception("Error while saving: " + response.StatusCode);
-                return int.Parse(response.Resource.Id);
+                if (string.IsNullOrEmpty(evt.Id))
+                    response = await _Client.CreateDocumentAsync(DocumentCollectionUri, evt);
+                else
+                {
+                    //update
+                    var doc = _Client.CreateDocumentQuery<Document>(DocumentCollectionUri).Where(d => d.Id == evt.Id).AsEnumerable().FirstOrDefault();
+                    if (doc == null) throw new Exception("Unable to update document");
 
+                    response = await _Client.ReplaceDocumentAsync(doc.SelfLink, evt);
+                }
+                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Created)
+                    throw new Exception("Error while saving: " + response.StatusCode);
+
+                return response.Resource.Id;
             }
             catch (Exception)
             {
@@ -68,7 +74,7 @@ namespace PottyTrainer.DataSource
         {
             try
             {
-                var response = _Client.CreateDocumentQuery<PeePooEvent>(CollectionUri, new FeedOptions { MaxItemCount = 1 }).Where(x => x.Id.Equals(id));
+                var response = _Client.CreateDocumentQuery<PeePooEvent>(DocumentCollectionUri, new FeedOptions { MaxItemCount = 1 }).Where(x => x.Id.Equals(id));
                 var evnt = response.FirstOrDefault();
                 return evnt;
 
@@ -84,7 +90,7 @@ namespace PottyTrainer.DataSource
         {
             try
             {
-                var response = _Client.CreateDocumentQuery<PeePooEvent>(CollectionUri, new FeedOptions { MaxItemCount = 100 });
+                var response = _Client.CreateDocumentQuery<PeePooEvent>(DocumentCollectionUri, new FeedOptions { MaxItemCount = 100 });
                 return response.ToList();
 
             }
@@ -116,7 +122,7 @@ namespace PottyTrainer.DataSource
         {
             try
             {
-                await _Client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName));
+                await _Client.ReadDocumentCollectionAsync(DocumentCollectionUri);
             }
             catch (DocumentClientException de)
             {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.Mvc;
-using PottyTrainer.Contracts;
+using PottyTrainer.DataModel;
 
 namespace PottyTrainer.Api.Controllers
 {

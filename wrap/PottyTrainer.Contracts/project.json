@@ -7,6 +7,13 @@
         "assembly": "../../PottyTrainer.Contracts/obj/{configuration}/PottyTrainer.Contracts.dll",
         "pdb": "../../PottyTrainer.Contracts/obj/{configuration}/PottyTrainer.Contracts.pdb"
       }
+    },
+    "net45+win+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10": {
+      "wrappedProject": "../../PottyTrainer.Contracts/PottyTrainer.Contracts.csproj",
+      "bin": {
+        "assembly": "../../PottyTrainer.Contracts/obj/{configuration}/PottyTrainer.Contracts.dll",
+        "pdb": "../../PottyTrainer.Contracts/obj/{configuration}/PottyTrainer.Contracts.pdb"
+      }
     }
   }
 }

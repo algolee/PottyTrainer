@@ -4,8 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
-using PottyTrainer.Contracts;
-using PottyTrainer.DataSource;
+
 
 namespace PottyTrainer.Api
 {
@@ -30,7 +29,7 @@ namespace PottyTrainer.Api
                     opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
 
-            services.AddSingleton<IPottyTrainerRepository, PottyTrainerRepository>();
+           // services.AddSingleton<IPottyTrainerRepository, PottyTrainerRepository>();
 
         }
 

@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PottyTrainer.Contracts\PottyTrainer.Contracts.csproj" />
+    <ProjectReference Include="..\PottyTrainer.DataModel\PottyTrainer.DataModel.csproj" />
     <ProjectReference Include="..\PottyTrainer.DataSource\PottyTrainer.DataSource.csproj" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />
