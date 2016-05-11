@@ -13,17 +13,9 @@ namespace PottyTrainer.Android
     [Service]
     public class PottyTrainerService : Service
     {
-        private const string API_URL = "http://localhost:7375/api/pottytrainer";
+        private const string API_URL = "http://localhost:5000/api/pottytrainer/";
         private RestClient _RestClient;
         private IBinder _Binder;
-
-        public event EventHandler<PeePooEventSavedArgs> SavedCompleted = delegate { };
-
-
-        private void RaiseSavedCompleted(int eventId, bool success = true, string errorMessage = "")
-        {
-            SavedCompleted?.Invoke(this, new PeePooEventSavedArgs(eventId) { ErrorMessage = errorMessage, IsSuccess = success });
-        }
 
         public override IBinder OnBind(Intent intent)
         {
@@ -41,21 +33,30 @@ namespace PottyTrainer.Android
 
         }
 
-        public void SaveEvent(PeePooEvent evt)
+        public void SaveEvent(PeePooEvent evt, Action<PeePooEventSavedArgs> callbackAction)
         {
+
             var request = new RestRequest("events", Method.POST)
             {
                 UseDefaultCredentials = true,
                 RequestFormat = DataFormat.Json,
                 JsonSerializer = new JsonSerializer()
-
             };
+            request.AddHeader("Content-Type", "application/json");
             request.AddBody(evt);
-            var response = _RestClient.Execute(request);
-            var eventid = JsonConvert.DeserializeObject<int>(response.Content);
-            RaiseSavedCompleted(eventid, response.ResponseStatus != ResponseStatus.Error, response.ErrorMessage);
-
-
+            _RestClient = new RestClient(new Uri(API_URL));
+            _RestClient.ExecuteAsync(request, response =>
+            {
+                if (response.ContentLength <= 0)
+                {
+                    callbackAction.Invoke(new PeePooEventSavedArgs(0) { ErrorMessage = "Unable to save Event", IsSuccess = false });
+                }
+                else
+                {
+                    var eventid = JsonConvert.DeserializeObject<int>(response.Content);
+                    callbackAction.Invoke(new PeePooEventSavedArgs(eventid) { IsSuccess = true });
+                }
+            });
         }
 
         public void DeleteEvent(long id)

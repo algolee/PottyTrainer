@@ -34,6 +34,8 @@ namespace PottyTrainner.Api
                     opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     
                 });
+            services.AddCors(
+                ops => ops.AddPolicy("AllowAllHeaders", builder => builder.WithOrigins("*").AllowAnyHeader()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +50,7 @@ namespace PottyTrainner.Api
             app.UseStaticFiles();
 
             app.UseMvc();
+            app.UseCors(builder => builder.WithOrigins("*").AllowAnyHeader());
         }
 
         // Entry point for the application.

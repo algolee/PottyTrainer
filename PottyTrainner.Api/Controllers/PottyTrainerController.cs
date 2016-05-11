@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Cors;
+using Microsoft.AspNet.Cors.Infrastructure;
 using Microsoft.AspNet.Mvc;
 using PottyTrainer.Contracts;
 
 namespace PottyTrainner.Api.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowAllHeaders")]
     public class PottyTrainerController : Controller
     {
         [HttpGet]
@@ -23,8 +26,7 @@ namespace PottyTrainner.Api.Controllers
             return new PeePooEvent() { EventType = EventType.Pee};
         }
 
-        [HttpPost]
-        [Route("events")]
+        [HttpPost("events")]
         public IActionResult Post([FromBody]PeePooEvent peePooEvent)
         {
 

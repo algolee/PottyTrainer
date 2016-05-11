@@ -46,7 +46,7 @@ namespace PottyTrainer.Android
 
         private AppUtils()
         {
-            _ServiceConnection = new PottyTrainerServiceConnection(null);
+            _ServiceConnection = new PottyTrainerServiceConnection();
             _ServiceConnection.ServiceConnected += (sender, args) =>
             {
                 PottyTrainerServiceConnected(this, args);

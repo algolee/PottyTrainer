@@ -23,6 +23,7 @@
   "frameworks": {
     "dnx451": {
       "dependencies": {
+        "Microsoft.AspNet.WebApi.Cors": "5.2.3",
         "PottyTrainer.Contracts": "1.0.0-*"
       }
     },

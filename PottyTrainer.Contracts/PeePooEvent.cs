@@ -4,7 +4,7 @@ namespace PottyTrainer.Contracts
 {
     public class PeePooEvent
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public DateTime EventWhen { get; set; }
 
         public EventType EventType { get; set; }

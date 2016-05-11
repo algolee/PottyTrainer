@@ -32,6 +32,8 @@ namespace PottyTrainer.Android
 
         private void ButtonClick(object sender, EventArgs eventArgs)
         {
+            //var progressDialog = ProgressDialog.Show(this, "Please wait...", "Saving info...", true);
+
             var btn = sender as Button;
             if (btn == null) return;
             var tag = btn.Tag.ToString();
@@ -42,8 +44,26 @@ namespace PottyTrainer.Android
             else if (tag.Equals("poo", StringComparison.CurrentCultureIgnoreCase))
                 evnt.EventType = EventType.Poo;
             else evnt.EventType = EventType.Both;
-            AppUtils.Instance.PottyTrainerService.SaveEvent(evnt);
-            LoadNextActivity(evnt.Id);
+            //progressDialog.Show();
+            //new Task(() =>
+            //{
+            AppUtils.Instance.PottyTrainerService.SaveEvent(evnt, args =>
+            {
+                RunOnUiThread(() =>
+                {
+                        // progressDialog.Hide();
+                        if (args.IsSuccess)
+                        LoadNextActivity(args.EventId);
+                    else
+                        Toast.MakeText(this, args.ErrorMessage, ToastLength.Long).Show();
+
+
+
+                });
+
+            });
+            //}).Start(TaskScheduler.Current);
+
         }
 
         private void LoadNextActivity(long id)
@@ -57,7 +77,7 @@ namespace PottyTrainer.Android
     public class TestRepository : IPottyTrainerRepository
     {
         private IDictionary<long, PeePooEvent> _Store = new Dictionary<long, PeePooEvent>();
-        private long _NextId = 0;
+        private int _NextId = 0;
         public long SaveEvent(PeePooEvent evt)
         {
             try
@@ -82,13 +102,13 @@ namespace PottyTrainer.Android
             }
         }
 
-        public bool DeleteEvent(long id)
+        public bool DeleteEvent(int id)
         {
             return _Store.Remove(id);
 
         }
 
-        public PeePooEvent GetEvent(long id)
+        public PeePooEvent GetEvent(int id)
         {
             return _Store[id];
         }
