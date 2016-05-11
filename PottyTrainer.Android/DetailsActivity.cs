@@ -25,6 +25,25 @@ namespace PottyTrainer.Android
             _BtnTime.Click += BtnTimeOnClick;
             var btnDone = FindViewById<Button>(Resource.Id.btnDone);
             btnDone.Click += SaveEvent;
+
+            var cbPee = FindViewById<CheckBox>(Resource.Id.chbPee);
+            var cbPoo = FindViewById<CheckBox>(Resource.Id.chbPoo);
+            var cbInToilet = FindViewById<CheckBox>(Resource.Id.chbInToilet);
+            var eventId = Intent.GetStringExtra("eventId");
+            AppUtils.Instance.PottyTrainerService.GetEvent(eventId, e =>
+            {
+                RunOnUiThread(() =>
+                {
+                    _BtnDate.Text = e.EventWhen.ToShortDateString();
+                    _BtnTime.Text = e.EventWhen.ToShortTimeString();
+
+                    cbPoo.Checked = e.EventType == EventType.Poo || e.EventType == EventType.Both;
+                    cbPee.Checked = e.EventType == EventType.Pee || e.EventType == EventType.Both;
+                    cbInToilet.Checked = e.InToilet;
+                    _CurrentEvent = e;
+
+                });
+            });
         }
 
         private void SaveEvent(object sender, EventArgs e)
@@ -50,6 +69,7 @@ namespace PottyTrainer.Android
         private void OnTimeSelected(object sender, TimePickerDialog.TimeSetEventArgs e)
         {
             _BtnTime.Text = e.HourOfDay + ":" + e.Minute;
+
         }
 
         private void OnDateSelected(object sender, DatePickerDialog.DateSetEventArgs e)

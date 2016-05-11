@@ -2,18 +2,18 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
-using Newtonsoft.Json;
 using PottyTrainer.Contracts;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace PottyTrainer.Android
 {
     [Service]
     public class PottyTrainerService : Service
     {
-        private const string API_URL = "http://localhost:5000/api/pottytrainer/";
+        private const string API_URL = "http://pottytrainerapi.azurewebsites.net/";
         private RestClient _RestClient;
         private IBinder _Binder;
 
@@ -44,16 +44,16 @@ namespace PottyTrainer.Android
             };
             request.AddHeader("Content-Type", "application/json");
             request.AddBody(evt);
-            _RestClient = new RestClient(new Uri(API_URL));
             _RestClient.ExecuteAsync(request, response =>
             {
-                if (response.ContentLength <= 0)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    callbackAction.Invoke(new PeePooEventSavedArgs(0) { ErrorMessage = "Unable to save Event", IsSuccess = false });
+                    callbackAction.Invoke(new PeePooEventSavedArgs("") { ErrorMessage = "Unable to save Event", IsSuccess = false });
                 }
                 else
                 {
-                    var eventid = JsonConvert.DeserializeObject<int>(response.Content);
+                    var eventid = response.Content;
+                    eventid = eventid.Replace("\"", "").Trim();
                     callbackAction.Invoke(new PeePooEventSavedArgs(eventid) { IsSuccess = true });
                 }
             });
@@ -64,9 +64,23 @@ namespace PottyTrainer.Android
             throw new NotImplementedException();
         }
 
-        public void GetEvent(long id)
+        public void GetEvent(string id, Action<PeePooEvent> callbackAction)
         {
-            throw new NotImplementedException();
+            var request = new RestRequest("events/{id}", Method.GET)
+            {
+                UseDefaultCredentials = true,
+                RequestFormat = DataFormat.Json,
+                JsonSerializer = new JsonSerializer()
+            };
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Accept", "application/json");
+            request.AddParameter("id", id);
+            _RestClient.ExecuteAsync<PeePooEvent>(request, response =>
+            {
+                callbackAction.Invoke(response.StatusCode != HttpStatusCode.OK ? null : response.Data);
+            });
+
+
         }
 
         public List<PeePooEvent> GetEvents()
@@ -80,13 +94,13 @@ namespace PottyTrainer.Android
         public bool IsSuccess { get; set; }
         public string ErrorMessage { get; set; }
 
-        public int EventId { get; set; }
+        public string EventId { get; set; }
 
         public PeePooEventSavedArgs()
         {
         }
 
-        public PeePooEventSavedArgs(int id)
+        public PeePooEventSavedArgs(string id)
         {
             EventId = id;
         }

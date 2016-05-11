@@ -4,8 +4,6 @@ using Android.OS;
 using Android.Widget;
 using PottyTrainer.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace PottyTrainer.Android
 {
@@ -51,8 +49,8 @@ namespace PottyTrainer.Android
             {
                 RunOnUiThread(() =>
                 {
-                        // progressDialog.Hide();
-                        if (args.IsSuccess)
+                    // progressDialog.Hide();
+                    if (args.IsSuccess)
                         LoadNextActivity(args.EventId);
                     else
                         Toast.MakeText(this, args.ErrorMessage, ToastLength.Long).Show();
@@ -66,7 +64,7 @@ namespace PottyTrainer.Android
 
         }
 
-        private void LoadNextActivity(long id)
+        private void LoadNextActivity(string id)
         {
             var intent = new Intent(this, typeof(DetailsActivity));
             intent.PutExtra("eventId", id);
@@ -74,51 +72,6 @@ namespace PottyTrainer.Android
         }
     }
 
-    public class TestRepository : IPottyTrainerRepository
-    {
-        private IDictionary<long, PeePooEvent> _Store = new Dictionary<long, PeePooEvent>();
-        private int _NextId = 0;
-        public long SaveEvent(PeePooEvent evt)
-        {
-            try
-            {
-                if (evt.Id <= 0)
-                {
-                    _NextId++;
-                    evt.Id = _NextId;
-                    _Store.Add(_NextId, evt);
-                }
-                else
-                {
-                    _Store[evt.Id] = evt;
-
-                }
-                return evt.Id;
-            }
-            catch (Exception)
-            {
-
-                return -1;
-            }
-        }
-
-        public bool DeleteEvent(int id)
-        {
-            return _Store.Remove(id);
-
-        }
-
-        public PeePooEvent GetEvent(int id)
-        {
-            return _Store[id];
-        }
-
-        public List<PeePooEvent> GetEvents()
-        {
-            return _Store.Values.ToList();
-
-        }
-    }
 
 
 }

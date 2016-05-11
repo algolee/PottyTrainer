@@ -24,14 +24,14 @@ namespace PottyTrainer.Api461.Controllers
         }
 
         [HttpGet]
-        [System.Web.Http.Route("events/{id}")]
-        public PeePooEvent Get(int id)
+        [Route("events/{id}")]
+        public PeePooEvent Get(string id)
         {
             return _Repository.GetEvent(id);
         }
 
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("events")]
+        [HttpPost]
+        [Route("events")]
         public async Task<string> Post([FromBody]PeePooEvent peePooEvent)
         {
             if (peePooEvent == null)
@@ -56,7 +56,7 @@ namespace PottyTrainer.Api461.Controllers
 
         [HttpDelete]
         [Route("events/{id}")]
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(string id)
         {
             var resp = await _Repository.DeleteEvent(id);
             return resp;

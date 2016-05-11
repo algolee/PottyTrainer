@@ -53,11 +53,11 @@ namespace PottyTrainer.DataSource
             }
         }
 
-        public async Task<bool> DeleteEvent(int id)
+        public async Task<bool> DeleteEvent(string id)
         {
             try
             {
-                var response = await _Client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(Database, Collection, id.ToString()));
+                var response = await _Client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(Database, Collection, id));
                 if (response.StatusCode != HttpStatusCode.OK)
                     throw new Exception("unable to delete eventId: " + id);
                 return true;
@@ -70,11 +70,11 @@ namespace PottyTrainer.DataSource
 
         }
 
-        public PeePooEvent GetEvent(int id)
+        public PeePooEvent GetEvent(string id)
         {
             try
             {
-                var response = _Client.CreateDocumentQuery<PeePooEvent>(DocumentCollectionUri, new FeedOptions { MaxItemCount = 1 }).Where(x => x.Id.Equals(id));
+                var response = _Client.CreateDocumentQuery<PeePooEvent>(DocumentCollectionUri, new FeedOptions { MaxItemCount = 1 }).Where(x => x.Id.Equals(id)).AsEnumerable();
                 var evnt = response.FirstOrDefault();
                 return evnt;
 

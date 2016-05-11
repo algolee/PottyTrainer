@@ -6,8 +6,8 @@ namespace PottyTrainer.DataModel
     public interface IPottyTrainerRepository
     {
         Task<string> SaveEvent(PeePooEvent evt);
-        Task<bool> DeleteEvent(int id);
-        PeePooEvent GetEvent(int id);
+        Task<bool> DeleteEvent(string id);
+        PeePooEvent GetEvent(string id);
         List<PeePooEvent> GetEvents();
     }
 }
