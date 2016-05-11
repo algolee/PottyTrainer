@@ -7,7 +7,7 @@
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>481d8af0-fcc9-4344-a639-e2299a24b7d0</ProjectGuid>
-    <RootNamespace>PottyTrainner.Api</RootNamespace>
+    <RootNamespace>PottyTrainer.Api</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">..\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
   </PropertyGroup>
@@ -16,6 +16,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PottyTrainer.Contracts\PottyTrainer.Contracts.csproj" />
+    <ProjectReference Include="..\PottyTrainer.DataModel\PottyTrainer.DataModel.csproj" />
+    <ProjectReference Include="..\PottyTrainer.DataSource\PottyTrainer.DataSource.csproj" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

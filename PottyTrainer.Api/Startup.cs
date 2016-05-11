@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
+﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 
-namespace PottyTrainner.Api
+
+namespace PottyTrainer.Api
 {
     public class Startup
     {
@@ -28,14 +25,12 @@ namespace PottyTrainner.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc().
-                AddJsonOptions(opt =>
-                {
+            services.AddMvc().AddJsonOptions(opt => {
                     opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    
-                });
-            services.AddCors(
-                ops => ops.AddPolicy("AllowAllHeaders", builder => builder.WithOrigins("*").AllowAnyHeader()));
+            });
+
+           // services.AddSingleton<IPottyTrainerRepository, PottyTrainerRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,13 +39,12 @@ namespace PottyTrainner.Api
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            
             app.UseIISPlatformHandler();
 
             app.UseStaticFiles();
 
             app.UseMvc();
-            app.UseCors(builder => builder.WithOrigins("*").AllowAnyHeader());
         }
 
         // Entry point for the application.
