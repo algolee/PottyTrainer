@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace PottyTrainer.DataSource
 {
@@ -20,27 +19,38 @@ namespace PottyTrainer.DataSource
         public PottyTrainerRepository()
         {
             _Client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
-            CreateDatabaseIfNotExists(Database);
-            CreateDocumentCollectionIfNotExists(Database, Collection);
         }
 
 
 
-        public async Task<string> SaveEvent(PeePooEvent evt)
+        public string SaveEvent(PeePooEvent evt)
         {
+            CreateDatabaseIfNotExists(Database);
+            CreateDocumentCollectionIfNotExists(Database, Collection);
+
             try
             {
                 ResourceResponse<Document> response;
                 //new
                 if (string.IsNullOrEmpty(evt.Id))
-                    response = await _Client.CreateDocumentAsync(DocumentCollectionUri, evt);
+                {
+                    var task = _Client.CreateDocumentAsync(DocumentCollectionUri, evt);
+                    task.Wait();
+                    response = task.Result;
+                }
                 else
                 {
                     //update
-                    var doc = _Client.CreateDocumentQuery<Document>(DocumentCollectionUri).Where(d => d.Id == evt.Id).AsEnumerable().FirstOrDefault();
+                    var doc =
+                        _Client.CreateDocumentQuery<Document>(DocumentCollectionUri)
+                            .Where(d => d.Id == evt.Id)
+                            .AsEnumerable()
+                            .FirstOrDefault();
                     if (doc == null) throw new Exception("Unable to update document");
 
-                    response = await _Client.ReplaceDocumentAsync(doc.SelfLink, evt);
+                    var task = _Client.ReplaceDocumentAsync(doc.SelfLink, evt);
+                    task.Wait();
+                    response = task.Result;
                 }
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Created)
                     throw new Exception("Error while saving: " + response.StatusCode);
@@ -53,18 +63,19 @@ namespace PottyTrainer.DataSource
             }
         }
 
-        public async Task<bool> DeleteEvent(string id)
+        public bool DeleteEvent(string id)
         {
             try
             {
-                var response = await _Client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(Database, Collection, id));
+                var task = _Client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(Database, Collection, id));
+                task.Wait();
+                var response = task.Result;
                 if (response.StatusCode != HttpStatusCode.OK)
                     throw new Exception("unable to delete eventId: " + id);
                 return true;
             }
             catch (Exception)
             {
-
                 throw;
             }
 
@@ -74,7 +85,7 @@ namespace PottyTrainer.DataSource
         {
             try
             {
-                var response = _Client.CreateDocumentQuery<PeePooEvent>(DocumentCollectionUri, new FeedOptions { MaxItemCount = 1 }).Where(x => x.Id.Equals(id)).AsEnumerable();
+                var response = _Client.CreateDocumentQuery<PeePooEvent>(DocumentCollectionUri).Where(x => x.Id.Equals(id)).ToList();
                 var evnt = response.FirstOrDefault();
                 return evnt;
 

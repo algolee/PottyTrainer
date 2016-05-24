@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace PottyTrainer.Api461.Controllers
@@ -10,7 +9,7 @@ namespace PottyTrainer.Api461.Controllers
 
     public class PottyTrainerController : ApiController
     {
-        IPottyTrainerRepository _Repository;
+        readonly IPottyTrainerRepository _Repository;
         public PottyTrainerController(IPottyTrainerRepository repository)
         {
             _Repository = repository;
@@ -25,19 +24,23 @@ namespace PottyTrainer.Api461.Controllers
 
         [HttpGet]
         [Route("events/{id}")]
-        public PeePooEvent Get(string id)
+        public HttpResponseMessage Get(string id)
         {
-            return _Repository.GetEvent(id);
+            var ppevent = _Repository.GetEvent(id);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ObjectContent<PeePooEvent>(ppevent, Configuration.Formatters.JsonFormatter)
+            };
         }
 
         [HttpPost]
         [Route("events")]
-        public async Task<string> Post([FromBody]PeePooEvent peePooEvent)
+        public string Post([FromBody]PeePooEvent peePooEvent)
         {
             if (peePooEvent == null)
                 throw new HttpResponseException(new HttpResponseMessage { ReasonPhrase = "incorrect object format", StatusCode = HttpStatusCode.BadRequest });
 
-            var id = await _Repository.SaveEvent(peePooEvent);
+            var id = _Repository.SaveEvent(peePooEvent);
             return id;
 
         }
@@ -56,9 +59,9 @@ namespace PottyTrainer.Api461.Controllers
 
         [HttpDelete]
         [Route("events/{id}")]
-        public async Task<bool> Delete(string id)
+        public bool Delete(string id)
         {
-            var resp = await _Repository.DeleteEvent(id);
+            var resp = _Repository.DeleteEvent(id);
             return resp;
         }
     }
